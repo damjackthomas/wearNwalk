@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEARNWALK - Inventory & Sales Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="brand-badge">WW</div>
+    <h1 id="shop-title">WEARNWALK</h1>
+    <p id="shop-tagline">Inventory & Sales Tracker</p>
+    <p id="shop-meta">Style. Comfort. Everyday.</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Access Panel</h2>
+      <div class="panel-switch">
+        <button type="button" id="open-guest-panel" class="secondary">Guest Panel</button>
+        <button type="button" id="open-admin-panel">Admin Panel</button>
+        <span id="active-role-label">Active: Guest</span>
+      </div>
+    </section>
+
+    <section id="admin-panel-login" class="card hidden">
+      <h2>Admin Login</h2>
+      <form id="admin-login-form">
+        <div class="grid">
+          <label>
+            Enter Admin PIN
+            <input id="admin-pin-input" type="password" placeholder="Enter PIN" required />
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit">Unlock Admin Panel</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="shop-section" class="card admin-only">
+      <h2>Shop Personalization</h2>
+      <form id="shop-form">
+        <div class="grid">
+          <label>
+            Shop Name
+            <input id="shop-name" type="text" value="WEARNWALK" required />
+          </label>
+          <label>
+            Owner Name
+            <input id="shop-owner" type="text" placeholder="e.g. Damja" />
+          </label>
+          <label>
+            Phone
+            <input id="shop-phone" type="text" placeholder="e.g. +91 98765 43210" />
+          </label>
+          <label>
+            Address
+            <input id="shop-address" type="text" placeholder="e.g. Main Market, City" />
+          </label>
+          <label>
+            Tagline
+            <input id="shop-tagline-input" type="text" value="Style. Comfort. Everyday." />
+          </label>
+          <label>
+            Admin PIN
+            <input id="shop-admin-pin" type="password" value="1234" />
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit">Save Shop Profile</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card admin-only">
+      <h2>Add / Update Product</h2>
+      <form id="product-form">
+        <input type="hidden" id="product-id" />
+        <div class="grid">
+          <label>
+            Product Name
+            <input id="product-name" type="text" required placeholder="e.g. Black Hoodie" />
+          </label>
+          <label>
+            SKU
+            <input id="product-sku" type="text" placeholder="Auto (or enter manually)" />
+          </label>
+          <label>
+            Category
+            <input id="product-category" type="text" placeholder="e.g. Hoodies" />
+          </label>
+          <label>
+            Stock Qty
+            <input id="product-stock" type="number" min="0" placeholder="Auto: 1" />
+          </label>
+          <label>
+            Unit Price
+            <input id="product-price" type="number" min="0" step="0.01" placeholder="Auto from internet" />
+          </label>
+          <label>
+            Size
+            <input id="product-size" type="text" placeholder="e.g. 7,8,9 or 10" />
+          </label>
+        </div>
+        <div class="actions">
+          <button type="submit">Save Product</button>
+          <button type="button" id="clear-form" class="secondary">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Inventory</h2>
+      <input id="search-input" type="text" placeholder="Search by name, sku, category..." />
+      <div class="table-wrap">
+        <table id="inventory-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>SKU</th>
+              <th>Category</th>
+              <th>Size</th>
+              <th>Stock</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card guest-only">
+      <h2>Create Sale & Generate Bill</h2>
+      <form id="sale-form">
+        <div class="grid">
+          <label>
+            Customer Name
+            <input id="customer-name" type="text" value="Walk-in" placeholder="Walk-in (auto)" />
+          </label>
+          <label>
+            Customer Phone Number
+            <input id="customer-phone" type="text" placeholder="e.g. 9876543210" />
+          </label>
+          <label>
+            Payment Method
+            <select id="payment-method" required>
+              <option value="Cash">Cash</option>
+              <option value="UPI">UPI</option>
+              <option value="Card">Card</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+        </div>
+        <div id="sale-items"></div>
+        <div class="actions">
+          <button type="button" id="add-sale-item" class="secondary">Add Item</button>
+          <button type="submit">Save Sale & Generate Bill</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card guest-only">
+      <h2>Recent Sales</h2>
+      <div class="table-wrap">
+        <table id="sales-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Bill No.</th>
+              <th>Customer</th>
+              <th>Product</th>
+              <th>Size</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <template id="bill-template">
+    <div class="bill">
+      <div class="bill-head">
+        <div>
+          <h2 data-bill="shopName">WEARNWALK</h2>
+          <p class="bill-tagline" data-bill="tagline">Inventory & Sales Bill</p>
+          <p><strong>Owner:</strong> <span data-bill="owner"></span></p>
+          <p><strong>Phone:</strong> <span data-bill="phone"></span></p>
+          <p><strong>Address:</strong> <span data-bill="address"></span></p>
+        </div>
+        <div class="bill-badge">TAX INVOICE</div>
+      </div>
+
+      <div class="bill-info-grid">
+        <p><strong>Bill No:</strong> <span data-bill="billNo"></span></p>
+        <p><strong>Date:</strong> <span data-bill="date"></span></p>
+        <p><strong>Customer:</strong> <span data-bill="customer"></span></p>
+        <p><strong>Phone:</strong> <span data-bill="customerPhone"></span></p>
+        <p><strong>Payment:</strong> <span data-bill="payment"></span></p>
+      </div>
+
+      <table class="bill-items">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Size</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="4">No items</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bill-total-box">
+        <p><span>Discount</span> <strong>Rs <span data-bill="discount"></span></strong></p>
+        <p class="grand-total"><span>Grand Total</span> <strong>Rs <span data-bill="total"></span></strong></p>
+      </div>
+
+      <p class="thanks">Thank you for shopping with WEARNWALK.</p>
+      <p class="bill-note">This is a computer-generated bill.</p>
+    </div>
+  </template>
+
+  <script src="seed-products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
